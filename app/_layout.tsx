@@ -12,5 +12,18 @@ export type RootStackParamList = {
 export default function RootLayout() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
 
-  return <>{/* Your code here for the stack navigator */}</>;
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="PostList"
+        component={PostListScreen}
+        options={{ title: "Posts" }}
+      />
+      <Stack.Screen
+        name="PostDetail"
+        component={PostDetailScreen}
+        options={{ title: "Post Detail" }}
+      />
+    </Stack.Navigator>
+  );
 }
