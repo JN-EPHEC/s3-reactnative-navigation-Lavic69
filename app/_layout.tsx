@@ -8,13 +8,27 @@ import PostDetailScreen from "./screens/PostDetailScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import ProductListScreen from "./screens/ProductListScreen";
+import ProductDetailScreen from "./screens/ProductDetailScreen";
+import CartScreen from "./screens/CartScreen";
 
 export type RootStackParamList = {
   PostList: undefined;
   PostDetail: { postId: string; title: string; content: string };
 };
 
+export type ShopStackParamList = {
+  ProductList: undefined;
+  ProductDetail: {
+    productId: string;
+    name: string;
+    price: string;
+    description: string;
+  };
+};
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const ShopStack = createNativeStackNavigator<ShopStackParamList>();
 const Tab = createBottomTabNavigator();
 
 function BlogStack() {
@@ -34,10 +48,27 @@ function BlogStack() {
   );
 }
 
+function ShopStackScreen() {
+  return (
+    <ShopStack.Navigator>
+      <ShopStack.Screen
+        name="ProductList"
+        component={ProductListScreen}
+        options={{ title: "Shop" }}
+      />
+      <ShopStack.Screen
+        name="ProductDetail"
+        component={ProductDetailScreen}
+        options={({ route }) => ({ title: route.params.name })}
+      />
+    </ShopStack.Navigator>
+  );
+}
+
 export default function RootLayout() {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Shop"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName:
@@ -74,24 +105,46 @@ export default function RootLayout() {
       })}
     >
       <Tab.Screen 
-        name="Home" 
-        component={HomeScreen}
-        options={{ title: "Home" }}
+        name="Shop" 
+        component={ShopStackScreen}
+        options={{ 
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons 
+              name={focused ? "cart" : "cart-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="Cart" 
+        component={CartScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons 
+              name={focused ? "basket" : "basket-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
       />
       <Tab.Screen 
         name="Blog" 
         component={BlogStack}
-        options={{ title: "Blog", headerShown: false }}
-      />
-      <Tab.Screen 
-        name="Profile" 
-        component={ProfileScreen}
-        options={{ title: "Profile" }}
-      />
-      <Tab.Screen 
-        name="Settings" 
-        component={SettingsScreen}
-        options={{ title: "Settings" }}
+        options={{ 
+          title: "Blog",
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons 
+              name={focused ? "book" : "book-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
